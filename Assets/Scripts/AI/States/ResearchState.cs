@@ -16,16 +16,9 @@ public class ResearchState : IAIState
 
     private NavMeshAgent _agent;
 
-    public void OnStateEnter()
-    {
-        if (_waypoints == null)
-            _waypoints = GameObject.FindGameObjectWithTag("Waypoints").GetComponent<Waypoints>().allWaypoints;
-        _destination = _waypoints[Random.Range(0, _waypoints.Length)].position;
-        if(_agent != null)
-            _agent.SetDestination(_destination);
-    }
+    private Waypoints _waypointsScript = null;
 
-    public StateStatus OnStateUpdate(Infos infos)
+    public void OnStateEnter(Infos infos)
     {
         if (_transform == null)
         {
@@ -33,11 +26,21 @@ public class ResearchState : IAIState
             _agent = infos._navMeshAgent;
             _agent.SetDestination(_destination);
         }
+        _waypointsScript = infos._waypoints;
         if (_body == null)
         {
             _body = _transform.GetChild(0);
         }
 
+        _waypoints = _waypointsScript.allWaypoints;
+        _destination = _waypoints[Random.Range(0, _waypoints.Length)].position;
+
+        if(_agent != null)
+            _agent.SetDestination(_destination);
+    }
+
+    public StateStatus OnStateUpdate()
+    {
         Quaternion finalRot = Quaternion.LookRotation(_destination - _transform.position);
         Vector3 rot = finalRot.eulerAngles;
         rot.x = 0;

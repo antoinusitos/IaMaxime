@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class GoAwayState : IAIState
 {
-    public void OnStateEnter()
+    public void OnStateEnter(Infos infos)
     {
         
     }
 
-    public StateStatus OnStateUpdate(Infos infos)
+    public StateStatus OnStateUpdate()
     {
         return StateStatus.LOOP;
     }

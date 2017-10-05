@@ -14,17 +14,9 @@ public class GoToActionState : IAIState
 
     private NavMeshAgent _agent;
 
-    public void OnStateEnter()
+    public void OnStateEnter(Infos infos)
     {
-        _destination = GameObject.FindGameObjectWithTag("Action").transform.position;
-        _destination.y = 0;
-        if(_agent != null)
-            _agent.SetDestination(_destination);
-    }
-
-    public StateStatus OnStateUpdate(Infos infos)
-    {
-        if(_transform == null)
+        if (_transform == null)
         {
             _transform = infos._transform;
             _agent = infos._navMeshAgent;
@@ -35,6 +27,14 @@ public class GoToActionState : IAIState
             _body = _transform.GetChild(0);
         }
 
+        _destination = GameObject.FindGameObjectWithTag("Action").transform.position;
+        _destination.y = 0;
+        if(_agent != null)
+            _agent.SetDestination(_destination);
+    }
+
+    public StateStatus OnStateUpdate()
+    {
         _body.rotation = Quaternion.Slerp(_body.rotation, Quaternion.Euler(0,0,0), Time.deltaTime * _rotationSpeed);
 
         if (Vector3.Distance(_transform.position, _destination) <= _distanceToChange)
