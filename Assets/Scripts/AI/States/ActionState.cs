@@ -12,7 +12,7 @@ public class ActionState : IAIState
         _currentTime = 0;
     }
 
-    public StateStatus OnStateUpdate(Transform transform)
+    public StateStatus OnStateUpdate(Infos infos)
     {
         _currentTime += Time.deltaTime;
         if(_currentTime >= _timeForAction)

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Camera : MonoBehaviour 
+public class PlayerCamera : MonoBehaviour 
 {
     float rotationY = 0F;
     public float minimumY = -60F;
@@ -18,7 +18,7 @@ public class Camera : MonoBehaviour
         _transform = transform;
         _transformParent = _transform.parent;
 
-        Cursor.visible = false;
+        //Cursor.visible = false;
     }
 
     private void Update() 

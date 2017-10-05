@@ -9,7 +9,7 @@ public class CheckingState : IAIState
         
     }
 
-    public StateStatus OnStateUpdate(Transform transform)
+    public StateStatus OnStateUpdate(Infos infos)
     {
         return StateStatus.LOOP;
     }

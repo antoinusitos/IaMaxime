@@ -1,48 +1,58 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.AI;
 using UnityEngine;
 
 public class ResearchState : IAIState 
 {
     private Transform[] _waypoints = null;
+    private Transform _transform = null;
+    private Transform _body = null;
     private Vector3 _destination = Vector3.zero;
-    private Vector3 _lastPos = Vector3.zero;
     private int _index = 0;
 
-    private float _speed = 4.0f;
-    private float _offset = 0f;
-    private float _distance = 0f;
-    private float _startTime = 0f;
+    private float _distanceToChange = 1.5f;
+    private float _rotationSpeed = 10.0f;
+
+    private NavMeshAgent _agent;
 
     public void OnStateEnter()
     {
-        _waypoints = GameObject.FindGameObjectWithTag("Waypoints").GetComponent<Waypoints>().allWaypoints;
-        _destination = _waypoints[_index].position;
-        _startTime = Time.time;
+        if (_waypoints == null)
+            _waypoints = GameObject.FindGameObjectWithTag("Waypoints").GetComponent<Waypoints>().allWaypoints;
+        _destination = _waypoints[Random.Range(0, _waypoints.Length)].position;
+        if(_agent != null)
+            _agent.SetDestination(_destination);
     }
 
-    public StateStatus OnStateUpdate(Transform transform)
+    public StateStatus OnStateUpdate(Infos infos)
     {
-        if (_lastPos == Vector3.zero)
+        if (_transform == null)
         {
-            _lastPos = transform.position;
-            _distance = Vector3.Distance(_lastPos, _destination);
+            _transform = infos._transform;
+            _agent = infos._navMeshAgent;
+            _agent.SetDestination(_destination);
+        }
+        if (_body == null)
+        {
+            _body = _transform.GetChild(0);
         }
 
-        float distCovered = (Time.time - _startTime) * _speed;
-        _offset = distCovered / _distance;
-        transform.position = Vector3.Lerp(_lastPos, _destination, _offset);
+        Quaternion finalRot = Quaternion.LookRotation(_destination - _transform.position);
+        Vector3 rot = finalRot.eulerAngles;
+        rot.x = 0;
+        rot.z = 0;
+        finalRot = Quaternion.Euler(rot);
+        _body.rotation = Quaternion.Slerp(_body.rotation, finalRot, Time.deltaTime * _rotationSpeed);
 
-        if(Vector3.Distance(transform.position, _destination) <= 0.1f)
+        if (Vector3.Distance(_transform.position, _destination) <= _distanceToChange)
         {
             _index ++;
             if(_index >= _waypoints.Length)
                 _index = 0;
-            _destination = _waypoints[_index].position;
+            _destination = _waypoints[Random.Range(0, _waypoints.Length)].position;
 
-            _startTime = Time.time;
-            _lastPos = transform.position;
-            _distance = Vector3.Distance(_lastPos, _destination);
+            _agent.SetDestination(_destination);
         }
 
         return StateStatus.LOOP;
@@ -50,6 +60,6 @@ public class ResearchState : IAIState
 
     public void OnStateExit()
     {
-
+        _agent.SetDestination(_transform.position);
     }
 }
