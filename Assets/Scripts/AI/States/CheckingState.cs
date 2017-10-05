@@ -6,16 +6,16 @@ public class CheckingState : IAIState
 {
     public void OnStateEnter()
     {
-        throw new System.NotImplementedException();
+        
     }
 
-    public void OnStateUpdate(Transform transform)
+    public StateStatus OnStateUpdate(Transform transform)
     {
-        throw new System.NotImplementedException();
+        return StateStatus.LOOP;
     }
 
     public void OnStateExit()
     {
-        throw new System.NotImplementedException();
+        
     }
 }

@@ -4,18 +4,27 @@ using UnityEngine;
 
 public class ActionState : IAIState
 {
+    private float _timeForAction = 5.0f;
+    private float _currentTime = 0f;
+
     public void OnStateEnter()
     {
-        throw new System.NotImplementedException();
+        _currentTime = 0;
     }
 
-    public void OnStateUpdate(Transform transform)
+    public StateStatus OnStateUpdate(Transform transform)
     {
-        throw new System.NotImplementedException();
+        _currentTime += Time.deltaTime;
+        if(_currentTime >= _timeForAction)
+        {
+            return StateStatus.SUCCESS;
+        }
+        
+        return StateStatus.LOOP;
     }
 
     public void OnStateExit()
     {
-        throw new System.NotImplementedException();
+
     }
 }

@@ -9,9 +9,9 @@ public class FollowState : IAIState
         
     }
 
-    public void OnStateUpdate(Transform transform)
+    public StateStatus OnStateUpdate(Transform transform)
     {
-
+        return StateStatus.LOOP;
     }
 
     public void OnStateExit()

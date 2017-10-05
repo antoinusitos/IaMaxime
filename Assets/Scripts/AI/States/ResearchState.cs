@@ -21,7 +21,7 @@ public class ResearchState : IAIState
         _startTime = Time.time;
     }
 
-    public void OnStateUpdate(Transform transform)
+    public StateStatus OnStateUpdate(Transform transform)
     {
         if (_lastPos == Vector3.zero)
         {
@@ -44,6 +44,8 @@ public class ResearchState : IAIState
             _lastPos = transform.position;
             _distance = Vector3.Distance(_lastPos, _destination);
         }
+
+        return StateStatus.LOOP;
     }
 
     public void OnStateExit()
